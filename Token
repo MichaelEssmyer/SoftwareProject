@@ -1,0 +1,17 @@
+class Token() {
+  //number: 1-10
+  int num;
+  void setNumber(int a){num =a;}
+  int getNUmber(){return num;}
+  
+  //type: dealer, player
+  bool type;
+  void setType(bool a){type = a;}
+  bool getType(){return type;}
+  
+  //location: table, hand
+  bool location;
+  void setLocation(bool a){location=a;}
+  bool getLocation(){return location;}
+  
+}
