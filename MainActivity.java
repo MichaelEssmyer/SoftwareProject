@@ -1,4 +1,4 @@
-package com.java.michael.pazzak_devo;
+package com.java.michael.pazzak_iteration3;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,24 +8,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.text.BreakIterator;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    int playerscore, opponentscore;
-
-    //String int1,int2,int3,int4;
-    int t1val, t2val, t3val,t4val;
-    int o1,o2,o3,o4;
-    int pwins, owins, alert, tokencount=0;
+    TextView PS, OS, PW, OW;
+    int t1val, t2val, t3val, t4val;
+    ImageView O1, O2, O3, O4;
+    int o1, o2, o3, o4;
+    int pscore, oscore, pwins, owins;
+    int alert = 0;
     int winner =3;
     //boolean opp, play =true;
-
+    ImageButton i, j, k,l;
+    Button endturn, stand;
     //Dialog Context View
     final Context context = this;
     @SuppressLint("WrongViewCast")
@@ -33,310 +33,316 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //runplayer();
-        final TextView pscore;
-        final TextView oscore;
-        //TextView
-        pscore = (TextView) findViewById(R.id.pscore);
-        oscore = (TextView) findViewById(R.id.oscore);
-        final TextView pwin;
-        final TextView owin;
-        pwin = (TextView) findViewById(R.id.pwins);
-        owin = (TextView) findViewById(R.id.owins);
-        //user selects tokens
 
-        //input string
-    /*    final EditText t1Edit,t2Edit,t3Edit,t4Edit;
-        t1Edit   = (EditText)findViewById(R.id.toggleButton1);
-        t2Edit   = (EditText)findViewById(R.id.toggleButton2);
-        t3Edit   = (EditText)findViewById(R.id.toggleButton3);
-        t4Edit   = (EditText)findViewById(R.id.toggleButton4);
-       final TextView t1Text,t2Text,t3Text,t4Text;
-        t1Text   = (TextView)findViewById(R.id.toggleButton1);
-        t2Text   = (TextView)findViewById(R.id.toggleButton2);
-        t3Text   = (TextView)findViewById(R.id.toggleButton3);
-        t4Text   = (TextView)findViewById(R.id.toggleButton4);
-*/
-        //Button
-        final Button endturn;
-        final Button stand;
+        //TextView
+        PS = (TextView) findViewById(R.id.pscore);
+        OS = (TextView) findViewById(R.id.oscore);
+        PW = (TextView) findViewById(R.id.pwins);
+        OW = (TextView) findViewById(R.id.owins);
+
+        //Token id & select & clear
+        i = (ImageButton) findViewById(R.id.image1);
+        j = (ImageButton) findViewById(R.id.image2);
+        k = (ImageButton) findViewById(R.id.image3);
+        l = (ImageButton) findViewById(R.id.image4);
+
+        //Token hidden & cleared
+        O1 = (ImageView) findViewById(R.id.imageo1);
+        O2 = (ImageView) findViewById(R.id.imageo2);
+        O3 = (ImageView) findViewById(R.id.imageo3);
+        O4 = (ImageView) findViewById(R.id.imageo4);
+
+        //player action buttons
         endturn = (Button) findViewById(R.id.endturn);
         stand = (Button) findViewById(R.id.stand);
 
-        final Button t1,t2,t3,t4;
-        t1 = (Button) findViewById(R.id.toggleButton1);
-        t2 = (Button) findViewById(R.id.toggleButton2);
-        t3 = (Button) findViewById(R.id.toggleButton3);
-        t4 = (Button) findViewById(R.id.toggleButton4);
-
         //The Game VVVVVVVVVVV
-        //get and add token to player score
-       if(pwins<=3 && owins<=3){ //manage rounds
+        if(pwins<3 && owins<3){ //manage rounds
+            if (alert == 0) {//start of first round alert w/ rules
+                getTokens();
+                //Alert Dialog Box
+                AlertDialog.Builder myDialogBuilder = new AlertDialog.Builder(context);
+                myDialogBuilder.setTitle("Welcome to Pazzak");
+                myDialogBuilder
+                        .setMessage("Get Closer to 20 than your opponent. \nWin 3 rounds to be victorious!!" +
+                                "\nGet Token gets you a new token.\nStand stops the dealer for the round")
+                        .setCancelable(false)
+                        .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int id) {
+
+                                dialogInterface.cancel();
+                            }
+                        });
+                AlertDialog alertDialog = myDialogBuilder.create();
+                alertDialog.show();
+                alert++;
+            }
             endturn.setText("Start");//initiate round
             stand.setText("Do not click");//initiate round
-           pscore.setText("Player score: " + playerscore);
-           oscore.setText("Opponent score: " + opponentscore);
-           //comp set tokens
-           if((pwins==0) && (owins==0)){
-               t1val = getToken();
-               t2val = getToken();
-               t3val = getToken();
-               t4val = getToken();
-               o1= getToken();
-               o2= getToken();
-               o3= getToken();
-               o4= getToken();
-               t1.setText(""+t1val);
-               t2.setText(""+t2val);
-               t3.setText(""+t3val);
-               t4.setText(""+t4val);
-           }
-            //User set tokens 1-10: t1, t2, t3, t4 :only for three rounds
-          /* if(tokencount<4){
-               int1 = t1Edit.getText().toString();
-               tokencheck(int1);
-               int2 = t2Edit.getText().toString();
-               tokencheck(int2);
-               int3 = t3Edit.getText().toString();
-               tokencheck(int3);
-               int4 = t4Edit.getText().toString();
-               tokencheck(int4);
-               t1Text.setText(t1Edit.getText().toString());
-               t2Text.setText(t2Edit.getText().toString());
-               t3Text.setText(t3Edit.getText().toString());
-               t4Text.setText(t4Edit.getText().toString());
-           }
-           Button mButton;
-           EditText mEdit;
-           TextView mText;
-
-           mEdit   = (EditText)findViewById(R.id.editText1);
-           mEdit.getText().toString();
-           And then, the instance of Textview is created to show the welcome message. This will be done by the following code.
-
-           mText = (TextView)findViewById(R.id.textView1);
-           mText.setText("Welcome "+mEdit.getText().toString()+"!");
-*/         t1.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 //send value to score
-                 playerscore+= t1val;
-                 //toggle off
-                 t1.setText("");
-                 t1val = 0;
-                 pscore.setText("Player score: " + playerscore);
-             }
-           });
-           t2.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View view) {
-                   //send value to score
-                   playerscore+= t2val;
-                   //toggle off
-                   t2.setText("");
-                   t2val = 0;
-                   pscore.setText("Player score: " + playerscore);
-               }
-           });
-           t3.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View view) {
-                   //send value to score
-                   playerscore+= t3val;
-                   //toggle off
-                   t3.setText("");
-                   t3val = 0;
-                   pscore.setText("Player score: " + playerscore);
-               }
-           });
-           t4.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View view) {
-                   //send value to score
-                   playerscore+= t4val;
-                   //toggle off
-                   t4.setText("");
-                   t4val = 0;
-                   pscore.setText("Player score: " + playerscore);
-               }
-           });
-
-           endturn.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View view) {
-                   stand.setText("Stand");
-                   endturn.setText("GetToken");
-                   if (alert == 0) {//start of first round alert w/ rules
-                               //Alert Dialog Box
-                               AlertDialog.Builder myDialogBuilder = new AlertDialog.Builder(context);
-                               myDialogBuilder.setTitle("Welcome to Pazzak");
-                               myDialogBuilder
-                                       .setMessage("Get Closer to 20 than your opponent. \nWin 3 rounds to be victorious!!" +
-                                               "\nGet Token gets you a new token.\nStand stops the dealer for the round")
-                                       .setCancelable(false)
-                                       .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-                                           @Override
-                                           public void onClick(DialogInterface dialogInterface, int id) {
-
-                                               dialogInterface.cancel();
-                                           }
-                                       });
-                               AlertDialog alertDialog = myDialogBuilder.create();
-                               alertDialog.show();
-                               alert++;
-                   }
-                   //deal player
-                   playerscore = playerscore + getToken();
-                   pscore.setText("Player score: " + playerscore);
-
-                   //run opponent after endturn
-                   if ((opponentscore <= 17) || ((opponentscore < playerscore) && (playerscore <= 20))) {
-                       opponentscore = opponentscore + getToken();
-                       //opponent may choose a card
-                       if(opponentscore+o1==20){opponentscore+=o1;o1=0;}
-                       if(opponentscore+o2==20){opponentscore+=o2;o2=0;}
-                       if(opponentscore+o3==20){opponentscore+=o3;o3=0;}
-                       if(opponentscore+o4==20){opponentscore+=o4;o4=0;}
-                       if(opponentscore+o1==19){opponentscore+=o1;o1=0;}
-                       if(opponentscore+o2==19){opponentscore+=o2;o2=0;}
-                       if(opponentscore+o3==19){opponentscore+=o3;o3=0;}
-                       if(opponentscore+o4==19){opponentscore+=o4;o4=0;}
-                       oscore.setText("Opponent score: " + opponentscore);
-                   }
-                   //opponent wins after end turn
-                   if ((opponentscore <= 20 && playerscore > 20)) {
-                       endturn.setText("Start Round");
-                       stand.setText("You lost");
-                       owins++;
-                       owin.setText("Opponent Wins: " + owins);
-                       opponentscore = 0;
-                       playerscore = 0;
-                       pscore.setText("Player score: " + playerscore);
-                       oscore.setText("Opponent score: " + opponentscore);
-                   }
-                   //Both lose
-                   if ((opponentscore > 20 && playerscore > 20)||(opponentscore == 20 && playerscore == 20)) {
-                       endturn.setText("Start Round");
-                       stand.setText("Tie");
-                       opponentscore = 0;
-                       playerscore = 0;
-                       pscore.setText("Player score: " + playerscore);
-                       oscore.setText("Opponent score: " + opponentscore);
-                   }
-                   //activate round
-                   //endturn.setText("EndTurn");
-                   //stand.setText("Stand");
-                   //reset
-                   if (pwins == winner) {
-                       owin.setText("Player Wins!!!!!!");
-                       owins = 0;
-                       pwins = 0;
-                       opponentscore = 0;
-                       playerscore = 0;
-                       pwin.setText("Player Wins: " + pwins);
-                       owin.setText("Opponent Wins: " + owins);
-                       endturn.setText("Start Round");
-                       stand.setText("You won");
-                       alert = 0;
-                   }
-                   if (owins == winner) {
-                       pwin.setText("Opponent Wins!!!!!!");
-                       stand.setText("You lost");
-                       owins = 0;
-                       pwins = 0;
-                       opponentscore = 0;
-                       playerscore = 0;
-                       pwin.setText("Player Wins: " + pwins);
-                       owin.setText("Opponent Wins: " + owins);
-                       endturn.setText("Start Round");
-                       stand.setText("You lost");
-                       alert = 0;
-                   }
-               }
-           });
-
-           stand.setOnClickListener(new View.OnClickListener(){
+            PS.setText("Player score: " + pscore);
+            OS.setText("Opponent score: " + oscore);
+            i.setOnClickListener(new View.OnClickListener(){
                 @Override
-                public void onClick(View view){
-                    //Once player stands run the opponent
-                    if((opponentscore<=17) || ((opponentscore < playerscore) && (opponentscore < 20)))
-                    {   //opponent wins after player stands
-                        if(opponentscore<=20 &&playerscore<opponentscore ){
-                            endturn.setText("Start5");
-                            owins++;
-                            owin.setText("Opponent Wins: "+ owins);
-                            opponentscore=0;
-                            playerscore=0;
-                            pscore.setText("Player score: " + playerscore);
-                            oscore.setText("Opponent score: " + opponentscore);
-                        }
-                        opponentscore = opponentscore + getToken();
-                        oscore.setText("Opponent score: " + opponentscore);
-                        pscore.setText("Player score: " + playerscore);
+                public void onClick(View view) {
+                    pscore+= t1val;
+                    //toggle off
+                    t1val = 0;
+                    i.setImageResource(R.drawable.icon0);
+                    //show score
+                    PS.setText("Player score: " + pscore);
+                }
+            });
+            j.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    pscore+= t2val;
+                    //toggle off
+                    t2val = 0;
+                    j.setImageResource(R.drawable.icon0);
+                    PS.setText("Player score: " + pscore);
+                }
+            });
+            k.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    pscore+= t3val;
+                    //toggle off
+                    t3val = 0;
+                    k.setImageResource(R.drawable.icon0);
+                    PS.setText("Player score: " + pscore);
+                }
+            });
+            l.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    //
+                    pscore+= t4val;
+                    //toggle off
+                    t4val = 0;
+                    l.setImageResource(R.drawable.icon0);
+                    PS.setText("Player score: " + pscore);
+                }
+            });
+            endturn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    stand.setText("Stand");
+                    endturn.setText("GetToken");
+                    //deal player
+                    pscore = pscore + getToken();
+                    PS.setText("Player score: " + pscore);
+
+                    //run opponent after endturn
+                    if ((oscore <= 17) || ((oscore < pscore) && (pscore <= 20))) {
+                        oscore = oscore + getToken();
+                        //opponent may choose a card
+                        if(oscore+o1==20){oscore+=o1;o1=0; O1.setImageResource(R.drawable.iconp);}
+                        if(oscore+o2==20){oscore+=o2;o2=0;O2.setImageResource(R.drawable.iconp);}
+                        if(oscore+o3==20){oscore+=o3;o3=0;O3.setImageResource(R.drawable.iconp);}
+                        if(oscore+o4==20){oscore+=o4;o4=0;O4.setImageResource(R.drawable.iconp);}
+                        if(oscore+o1==19){oscore+=o1;o1=0;O1.setImageResource(R.drawable.iconp);}
+                        if(oscore+o2==19){oscore+=o2;o2=0;O2.setImageResource(R.drawable.iconp);}
+                        if(oscore+o3==19){oscore+=o3;o3=0;O3.setImageResource(R.drawable.iconp);}
+                        if(oscore+o4==19){oscore+=o4;o4=0;O4.setImageResource(R.drawable.iconp);}
+                        OS.setText("Opponent score: " + oscore);
+                        //setImages();
                     }
-                    //player wins
-                    if((playerscore<=20 && opponentscore>20)||
-                            (playerscore>opponentscore && playerscore<=20)){
-                        endturn.setText("Start6");
-                        pwins++;
-                        pwin.setText("Player Wins: "+ pwins);
-                        opponentscore=0;
-                        playerscore=0;
-                        pscore.setText("Player score: " + playerscore);
-                        oscore.setText("Opponent score: " + opponentscore);
-                    }
-                    //opponent wins
-                    if(((playerscore<opponentscore) && (opponentscore<=20))){
-                        endturn.setText("Start");
+                    //opponent wins after end turn
+                    if ((oscore <= 20 && pscore > 20)) {
+                        endturn.setText("Start Round");
+                        stand.setText("You lost");
                         owins++;
-                        owin.setText("Opponent Wins: "+ owins);
-                        opponentscore=0;
-                        playerscore=0;
-                        pscore.setText("Player score: " + playerscore);
-                        oscore.setText("Opponent score: " + opponentscore);
+                        OW.setText("Opponent Wins: " + owins);
+                        oscore = 0;
+                        pscore = 0;
+                        PS.setText("Player score: " + pscore);
+                        OS.setText("Opponent score: " + oscore);
                     }
-                    //tie
-                    if(((playerscore==20&&opponentscore==20) ||
-                            (playerscore==19&&opponentscore==19) ||
-                            (playerscore==18&&opponentscore==18) ||
-                            (opponentscore>20&&playerscore>20))){
-                        endturn.setText("Start22");
+                    //Both lose
+                    if ((oscore > 20 && pscore > 20)||(oscore == 20 && pscore == 20)) {
+                        endturn.setText("Start Round");
                         stand.setText("Tie");
-                        opponentscore = 0;
-                        playerscore = 0;
-                        pscore.setText("Player score: " + playerscore);
-                        oscore.setText("Opponent score: " + opponentscore);
+                        oscore = 0;
+                        pscore = 0;
+                        PS.setText("Player score: " + pscore);
+                        OS.setText("Opponent score: " + oscore);
                     }
                     //reset
-                    if(pwins==winner){
-                        owin.setText("Player Wins!!!!!!");
-                        owins=0;
-                        pwins = 0;
-                        opponentscore=0;
-                        playerscore=0;
-                        pscore.setText("Player score: " + playerscore);
-                        oscore.setText("Opponent score: " + opponentscore);
-                        pwin.setText("Player Wins: "+ pwins);
-                        endturn.setText("Start Round");
-                        alert=0;
-                    }
-                    if(owins==winner) {
-                        pwin.setText("Opponent Wins!!!!!!");
+                    if (pwins == winner) {
+                        OW.setText("Player Wins!!!!!!");
                         owins = 0;
                         pwins = 0;
-                        opponentscore = 0;
-                        playerscore = 0;
-                        pscore.setText("Player score: " + playerscore);
-                        oscore.setText("Opponent score: " + opponentscore);
-                        owin.setText("Opponent Wins: " + owins);
+                        oscore = 0;
+                        pscore = 0;
+                        PW.setText("Opponent Wins: " + owins);
                         endturn.setText("Start Round");
+                        stand.setText("You won");
                         alert = 0;
+                        getTokens();
+                    }
+                    if (owins == winner) {
+                        stand.setText("You lost");
+                        owins = 0;
+                        pwins = 0;
+                        oscore = 0;
+                        pscore = 0;
+                        PW.setText("Player Wins: " + pwins);
+                        OW.setText("Opponent Wins: " + owins);
+                        endturn.setText("Start Round");
+                        stand.setText("You lost");
+                        alert = 0;
+                        getTokens();
                     }
                 }
             });
-    }
-    }
 
+            stand.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    //Once player stands run the opponent
+                    if((oscore<=17) || ((oscore < pscore) && (oscore < 20)))
+                    {   //opponent wins after player stands
+                        if(oscore<=20 &&pscore<oscore ){
+                            endturn.setText("Start Round");
+                            owins++;
+                            OW.setText("Opponent Wins: "+ owins);
+                            oscore=0;
+                            pscore=0;
+                            PS.setText("Player score: " + pscore);
+                            OS.setText("Opponent score: " + oscore);
+                        }
+                        oscore = oscore + getToken();
+                        OS.setText("Opponent score: " + oscore);
+                        PS.setText("Player score: " + pscore);
+                    }
+                    //player wins
+                    if((pscore<=20 && oscore>20)||
+                            (pscore>oscore && pscore<=20)){
+                        endturn.setText("Start Round");
+                        pwins++;
+                        PW.setText("Player Wins: "+ pwins);
+                        oscore=0;
+                        pscore=0;
+                        PS.setText("Player score: " + pscore);
+                        OS.setText("Opponent score: " + oscore);
+                    }
+                    //opponent wins
+                    if(((pscore<oscore) && (oscore<=20))){
+                        endturn.setText("Start Round");
+                        owins++;
+                        OW.setText("Opponent Wins: "+ owins);
+                        oscore=0;
+                        pscore=0;
+                        PS.setText("Player score: " + pscore);
+                        OS.setText("Opponent score: " + oscore);
+                    }
+                    //tie
+                    if(((pscore==20&&oscore==20) ||
+                            (pscore==19&&oscore==19) ||
+                            (pscore==18&&oscore==18) ||
+                            (oscore>20&&pscore>20))){
+                        endturn.setText("Start Round");
+                        stand.setText("Tie");
+                        oscore = 0;
+                        pscore = 0;
+                        PS.setText("Player score: " + pscore);
+                        OS.setText("Opponent score: " + oscore);
+                    }
+                    //reset
+                    if(pwins==winner){
+                        OW.setText("Player Wins!!!!!!");
+                        owins=0;
+                        pwins = 0;
+                        oscore=0;
+                        pscore=0;
+                        PS.setText("Player score: " + pscore);
+                        OS.setText("Opponent score: " + oscore);
+                        PW.setText("Player Wins: "+ pwins);
+                        endturn.setText("Start Round");
+                        alert=0;
+                        getTokens();
+                    }
+                    if(owins==winner) {
+                        PW.setText("Opponent Wins!!!!!!");
+                        owins = 0;
+                        pwins = 0;
+                        oscore = 0;
+                        pscore = 0;
+                        PS.setText("Player score: " + pscore);
+                        OS.setText("Opponent score: " + oscore);
+                        OW.setText("Opponent Wins: " + owins);
+                        endturn.setText("Start Round");
+                        alert = 0;
+                        getTokens();
+                    }
+                }
+            });
+        }
+        //
+    }
+    public void setImages(){
+        if(t1val == 0){i.setImageResource(R.drawable.icon0);}
+        if(t1val == 1){i.setImageResource(R.drawable.icon1);}
+        if(t1val == 2){i.setImageResource(R.drawable.icon2);}
+        if(t1val == 3){i.setImageResource(R.drawable.icon3);}
+        if(t1val == 4){i.setImageResource(R.drawable.icon4);}
+        if(t1val == 5){i.setImageResource(R.drawable.icon5);}
+        if(t1val == 6){i.setImageResource(R.drawable.icon6);}
+        if(t1val == 7){i.setImageResource(R.drawable.icon7);}
+        if(t1val == 8){i.setImageResource(R.drawable.icon8);}
+        if(t1val == 9){i.setImageResource(R.drawable.icon9);}
+        if(t1val == 10){i.setImageResource(R.drawable.icon10);}
+        if(t2val == 0){j.setImageResource(R.drawable.icon0);}
+        if(t2val == 1){j.setImageResource(R.drawable.icon1);}
+        if(t2val == 2){j.setImageResource(R.drawable.icon2);}
+        if(t2val == 3){j.setImageResource(R.drawable.icon3);}
+        if(t2val == 4){j.setImageResource(R.drawable.icon4);}
+        if(t2val == 5){j.setImageResource(R.drawable.icon5);}
+        if(t2val == 6){j.setImageResource(R.drawable.icon6);}
+        if(t2val == 7){j.setImageResource(R.drawable.icon7);}
+        if(t2val == 8){j.setImageResource(R.drawable.icon8);}
+        if(t2val == 9){j.setImageResource(R.drawable.icon9);}
+        if(t2val == 10){j.setImageResource(R.drawable.icon10);}
+        if(t3val == 0){k.setImageResource(R.drawable.icon0);}
+        if(t3val == 1){k.setImageResource(R.drawable.icon1);}
+        if(t3val == 2){k.setImageResource(R.drawable.icon2);}
+        if(t3val == 3){k.setImageResource(R.drawable.icon3);}
+        if(t3val == 4){k.setImageResource(R.drawable.icon4);}
+        if(t3val == 5){k.setImageResource(R.drawable.icon5);}
+        if(t3val == 6){k.setImageResource(R.drawable.icon6);}
+        if(t3val == 7){k.setImageResource(R.drawable.icon7);}
+        if(t3val == 8){k.setImageResource(R.drawable.icon8);}
+        if(t3val == 9){k.setImageResource(R.drawable.icon9);}
+        if(t3val == 10){k.setImageResource(R.drawable.icon10);}
+        if(t4val == 0){l.setImageResource(R.drawable.icon0);}
+        if(t4val == 1){l.setImageResource(R.drawable.icon1);}
+        if(t4val == 2){l.setImageResource(R.drawable.icon2);}
+        if(t4val == 3){l.setImageResource(R.drawable.icon3);}
+        if(t4val == 4){l.setImageResource(R.drawable.icon4);}
+        if(t4val == 5){l.setImageResource(R.drawable.icon5);}
+        if(t4val == 6){l.setImageResource(R.drawable.icon6);}
+        if(t4val == 7){l.setImageResource(R.drawable.icon7);}
+        if(t4val == 8){l.setImageResource(R.drawable.icon8);}
+        if(t4val == 9){l.setImageResource(R.drawable.icon9);}
+        if(t4val == 10){l.setImageResource(R.drawable.icon10);}
+        else{getTokens();}
+      if(o1>0){O1.setImageResource(R.drawable.icon0);}
+      if(o2>0){  O2.setImageResource(R.drawable.icon0);}
+      if(o3>0){ O3.setImageResource(R.drawable.icon0);}
+      if(o4>0){ O4.setImageResource(R.drawable.icon0);}
+    }
+    public void getTokens(){
+        t1val = getToken();
+        t2val = getToken();
+        t3val = getToken();
+        t4val = getToken();
+        o1 = getToken();
+        o2 = getToken();
+        o3 = getToken();
+        o4 = getToken();
+        setImages();
+    }
     //get random token
     public int getToken(){
         int i = randomNumberInRange(10, 1);
@@ -346,57 +352,4 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
         return random.nextInt((max - min) + 1) + min;
     }
-    //compares string values and if 1-10 saves to integer and incriments the token count
-    /*
-    public void tokencheck(String stringedInt){
-        if(tokencount==0){tokencount++;
-            if(stringedInt=="1"){t1val =1;}
-            if(stringedInt=="2"){t1val =2;}
-            if(stringedInt=="3"){t1val =3;}
-            if(stringedInt=="4"){t1val =4;}
-            if(stringedInt=="5"){t1val =5;}
-            if(stringedInt=="6"){t1val =6;}
-            if(stringedInt=="7"){t1val =7;}
-            if(stringedInt=="8"){ t1val =8;}
-            if(stringedInt=="9"){t1val =9;}
-            if(stringedInt=="10"){t1val =10;}
-            else{tokencount--;}
-        }
-        if(tokencount==1){tokencount++;
-            if(stringedInt=="1"){t2val =1;}
-            if(stringedInt=="2"){t2val =2;}
-            if(stringedInt=="3"){t2val =3;}
-            if(stringedInt=="4"){t2val =4;}
-            if(stringedInt=="5"){t2val =5;}
-            if(stringedInt=="6"){t2val =6;}
-            if(stringedInt=="7"){t2val =7;}
-            if(stringedInt=="8"){t2val =8;}
-            if(stringedInt=="9"){t2val =9;}
-            if(stringedInt=="10"){t2val =10;}
-            else{tokencount--;}}
-        if(tokencount==2){tokencount++;
-            if(stringedInt=="1"){t3val =1;}
-            if(stringedInt=="2"){t3val =2;}
-            if(stringedInt=="3"){t3val =3;}
-            if(stringedInt=="4"){t3val =4;}
-            if(stringedInt=="5"){ t3val =5;}
-            if(stringedInt=="6"){t3val =6;}
-            if(stringedInt=="7"){t3val =7;}
-            if(stringedInt=="8"){t3val =8;}
-            if(stringedInt=="9"){t3val =9;}
-            if(stringedInt=="10"){t3val =10;}
-            else{tokencount--;}}
-        if(tokencount==3){ tokencount++;
-            if(stringedInt=="1"){ t4val =1;}
-            if(stringedInt=="2"){ t4val =2;}
-            if(stringedInt=="3"){ t4val =3;}
-            if(stringedInt=="4"){ t4val =4;}
-            if(stringedInt=="5"){t4val =5;}
-            if(stringedInt=="6"){t4val =6;}
-            if(stringedInt=="7"){t4val =7;}
-            if(stringedInt=="8"){t4val =8;}
-            if(stringedInt=="9"){t4val =9;}
-            if(stringedInt=="10"){t4val =10;}
-            else{tokencount--;}}
-    }*/
 }
