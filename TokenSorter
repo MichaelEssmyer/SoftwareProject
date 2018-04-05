@@ -1,0 +1,34 @@
+package com.java.michael.pazzhack;
+
+/**
+ * Created by Michael on 3/27/18.
+ */
+
+public class TokenSorter extends MainActivity {
+    Token tok1 = new Token();
+    Token tok2 = new Token();
+    Token tok3 = new Token();
+    Token tok4 = new Token();
+    boolean stand = false;
+
+
+    public boolean getBool(){
+        return stand;
+    }
+    public void setBool(boolean bool){
+        stand = bool;
+    }
+    public int getval(int i){
+        if(i==1){return tok1.getTokenvalue();}
+        if(i==2){return tok2.getTokenvalue();}
+        if(i==3){return tok3.getTokenvalue();}
+        if(i==4){return tok4.getTokenvalue();}
+        else{return 0;}
+    }
+    public void setval(int i, int j){
+        if(i==1){tok1.setTokenvalue(j);}
+        if(i==2){tok2.setTokenvalue(j);}
+        if(i==3){tok3.setTokenvalue(j);}
+        if(i==4){tok4.setTokenvalue(j);}
+    }
+}
