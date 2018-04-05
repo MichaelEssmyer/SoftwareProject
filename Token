@@ -1,17 +1,21 @@
-class Token() {
-  //number: 1-10
-  int num;
-  void setNumber(int a){num =a;}
-  int getNUmber(){return num;}
-  
-  //type: dealer, player
-  bool type;
-  void setType(bool a){type = a;}
-  bool getType(){return type;}
-  
-  //location: table, hand
-  bool location;
-  void setLocation(bool a){location=a;}
-  bool getLocation(){return location;}
-  
+package com.java.michael.pazzhack;
+
+import java.util.Random;
+
+/**
+ * Created by Michael on 3/27/18.
+ */
+
+public class Token extends TokenSorter{
+    int tokenvalue;
+    Token(){
+        int i = randomNumberInRange(10,1);
+        tokenvalue = i;
+    }
+    private int randomNumberInRange(int max, int min){
+        Random RanNum = new Random();
+        return RanNum.nextInt((max - min)+1)+min;
+    }
+    public int getTokenvalue(){return tokenvalue;}
+    public void setTokenvalue(int val){tokenvalue = val;}
 }
