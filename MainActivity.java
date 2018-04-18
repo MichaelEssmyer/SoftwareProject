@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
         //The Game VVVVVVVVVVV
         if(pwins<3 && owins<3){ //manage rounds
+            assert(alert);
+            assert(pwins);
+            assert(owins);
             if (alert == 0) {//start of first round alert w/ rules
                 getTokens();
                 //Alert Dialog Box
