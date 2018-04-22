@@ -3,9 +3,12 @@ package com.java.michael.pazzak_iteration3;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,6 +21,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     TextView PS, OS, PW, OW; //score and wins view
     int t1val, t2val, t3val, t4val; // player token values
+    int credits = 100; //player initial credits
     ImageView opptok1, opptok2, opptok3, opptok4; //Opponent token cards
     int o1, o2, o3, o4; //opponent token values
     //boolean opp, play =true;
@@ -56,11 +60,26 @@ public class MainActivity extends AppCompatActivity {
         endturn = (Button) findViewById(R.id.endturn);
         stand = (Button) findViewById(R.id.stand);
 
+        // /
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == R.id.reset_id) {
+                bet = input("Enter bet here: " );
+                assert(bet<credits);
+                SharedPreferences.Editor myEdit = getSharedPreferences("The Preference", MODE_PRIVATE).edit();
+                myEdit.putInt("SaveState", credits);
+                myEdit.apply();
+                return true;
+            }
+            if (id == R.id.about_id) {
+                Intent intent = new Intent(this, About_Activity.class);
+                startActivity(intent);
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
         //The Game VVVVVVVVVVV
         if(pwins<3 && owins<3){ //manage rounds
-            assert(alert);
-            assert(pwins);
-            assert(owins);
             if (alert == 0) {//start of first round alert w/ rules
                 getTokens();
                 //Alert Dialog Box
@@ -183,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                         endturn.setText("Start Round");
                         stand.setText("You won");
                         alert = 0;
+                        credits += bet;
                         getTokens();
                     }
                     if (owins == winner) {
@@ -230,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                         PW.setText("Player Wins: "+ pwins);
                         oscore=0;
                         pscore=0;
+                        credits += bet;
                         PS.setText("Player score: " + pscore);
                         OS.setText("Opponent score: " + oscore);
                     }
@@ -392,5 +413,3 @@ public class MainActivity extends AppCompatActivity {
         }}
 }
 
-
-    
