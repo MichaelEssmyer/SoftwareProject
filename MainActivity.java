@@ -65,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == R.id.reset_id) {
-                bet = input("Enter bet here: " );
+                try{ bet = input("Enter bet here: " );}
+                catch (InvalidCastException e){System.err.println("Caught InvalidCastException: " + e.getMessage());}
                 assert(bet<credits);
                 SharedPreferences.Editor myEdit = getSharedPreferences("The Preference", MODE_PRIVATE).edit();
                 myEdit.putInt("SaveState", credits);
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             stand.setText("Do not click");//initiate round
             PS.setText("Player score: " + pscore);
             OS.setText("Opponent score: " + oscore);
-            playtok1.setOnClickListener(new View.OnClickListener(){
+            try{playtok1.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
                     pscore+= t1val;
@@ -144,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
                     playtok4.setImageResource(R.drawable.iconu);
                     PS.setText("Player score: " + pscore);
                 }
-            });
+            });}
+            catch(Exception e){System.err.println("Caught InvalidCastException: " + e.getMessage());}
             endturn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
